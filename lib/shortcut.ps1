@@ -6,13 +6,7 @@ param(
   [string]$Description = ''
 )
 
-# Shortcut CRUD for the Startup folder. ASCII only: Windows PowerShell 5.1
-# reads a BOM-less script as ANSI, so non-ASCII source would be mangled.
 $ErrorActionPreference = 'Stop'
-
-# Windows PowerShell 5.1 writes stdout in the console code page (GBK on a
-# Chinese system). Node decodes as UTF-8, so non-ASCII paths would come back
-# garbled and the read-back comparison in autostart-win.js would fail.
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 

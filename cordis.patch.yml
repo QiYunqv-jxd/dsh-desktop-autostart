@@ -1,6 +1,3 @@
-# dsh-desktop-autostart bundle patch: one loader row mounts the host half.
-# The host half only touches the current user's Startup folder shortcut, so it
-# needs no client module and no extra service beyond what every profile has.
 - insert:
     - id: desktop-autostart
       name: dsh-desktop-autostart
