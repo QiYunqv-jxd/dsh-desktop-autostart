@@ -11,6 +11,12 @@ param(
 # reads a BOM-less script as ANSI, so non-ASCII source would be mangled.
 $ErrorActionPreference = 'Stop'
 
+# Windows PowerShell 5.1 writes stdout in the console code page (GBK on a
+# Chinese system). Node decodes as UTF-8, so non-ASCII paths would come back
+# garbled and the read-back comparison in autostart-win.js would fail.
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 $shell = New-Object -ComObject WScript.Shell
 
 if ($Action -eq 'remove') {
@@ -34,6 +40,7 @@ if ($Action -eq 'create') {
   if ($Description) { $shortcut.Description = $Description }
   if (-not $shortcut.IconLocation) { $shortcut.IconLocation = "$TargetPath,0" }
   $shortcut.Save()
+  if (-not (Test-Path -LiteralPath $LnkPath)) { throw "shortcut file was not created: $LnkPath" }
 }
 
 if (Test-Path -LiteralPath $LnkPath) {
