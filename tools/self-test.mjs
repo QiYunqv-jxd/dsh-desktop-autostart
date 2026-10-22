@@ -5,11 +5,19 @@ import assert from 'node:assert/strict'
 import { DEFAULT_NAME, disable, enable, readShortcut, resolveDesktopExecutable, startupDir, status } from '../lib/autostart-win.js'
 
 const TEST_NAME = 'dsh-autostart-selftest.lnk'
-const TARGET = 'D:\\DeepSeek Harness\\DeepSeek Harness.exe'
+const TARGET = process.env.DSH_DESKTOP_EXE || resolveDesktopExecutable()
 
 const report = { platform: process.platform, startupDir: startupDir(), steps: [] }
 
-report.steps.push({ step: 'resolve', execPath: process.execPath, desktop: resolveDesktopExecutable() })
+report.steps.push({ step: 'resolve', execPath: process.execPath, desktop: resolveDesktopExecutable(), target: TARGET })
+
+if (!TARGET) {
+  // 在 node.exe 下跑时拿不到桌面版路径；这不是失败，只是这台机器上没法做完整往返。
+  report.ok = true
+  report.skipped = 'desktop executable not found (run inside the DSH desktop app, or set DSH_DESKTOP_EXE, to run the full round-trip)'
+  console.log(JSON.stringify(report, null, 2))
+  process.exit(0)
+}
 
 const before = await readShortcut({ name: TEST_NAME })
 assert.equal(before.exists, false, '测试名启动项应为空')

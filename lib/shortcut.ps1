@@ -3,7 +3,6 @@ param(
   [Parameter(Mandatory = $true)][string]$LnkPath,
   [string]$TargetPath = '',
   [string]$WorkingDirectory = '',
-  [string]$Arguments = '',
   [string]$Description = ''
 )
 
@@ -36,7 +35,6 @@ if ($Action -eq 'create') {
   $shortcut = $shell.CreateShortcut($LnkPath)
   $shortcut.TargetPath = $TargetPath
   if ($WorkingDirectory) { $shortcut.WorkingDirectory = $WorkingDirectory }
-  if ($Arguments) { $shortcut.Arguments = $Arguments }
   if ($Description) { $shortcut.Description = $Description }
   if (-not $shortcut.IconLocation) { $shortcut.IconLocation = "$TargetPath,0" }
   $shortcut.Save()
