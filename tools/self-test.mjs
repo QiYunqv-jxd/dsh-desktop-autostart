@@ -2,7 +2,7 @@
 // 期望最后一行 ok:true。
 
 import assert from 'node:assert/strict'
-import { DEFAULT_NAME, disable, enable, readShortcut, resolveDesktopExecutable, startupDir, status } from '../lib/autostart-win.js'
+import { DEFAULT_NAME, disable, enable, normalizePath, readShortcut, resolveDesktopExecutable, startupDir, status } from '../lib/autostart-win.js'
 
 const TEST_NAME = 'dsh-autostart-selftest.lnk'
 const TARGET = process.env.DSH_DESKTOP_EXE || resolveDesktopExecutable()
@@ -27,7 +27,8 @@ report.steps.push({ step: 'enable', ...on })
 
 const onState = await readShortcut({ name: TEST_NAME })
 assert.equal(onState.exists, true)
-assert.equal(onState.target.toLowerCase(), TARGET.toLowerCase())
+// 与 enable 内同一套归一化口径比较，避免正斜杠/大小写差异造成误报。
+assert.equal(normalizePath(onState.target), normalizePath(TARGET), `读回目标应为 ${TARGET}，实际 ${onState.target}`)
 
 const off = await disable({ name: TEST_NAME })
 report.steps.push({ step: 'disable', ...off })
