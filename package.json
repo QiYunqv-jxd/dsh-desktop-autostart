@@ -1,0 +1,44 @@
+{
+  "name": "dsh-desktop-autostart",
+  "version": "0.1.0",
+  "description": "让 DeepSeek Harness 桌面版随 Windows 登录自动启动：只管理用户级启动文件夹里的那个快捷方式，不写注册表、不需要管理员、不额外常驻进程。Logon autostart for the DSH desktop app (Windows), implemented as one startup-folder shortcut.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "autostart",
+    "windows",
+    "startup",
+    "logon"
+  ],
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
