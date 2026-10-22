@@ -1,45 +1,42 @@
 # dsh-desktop-autostart
 
-Logon autostart for the **DeepSeek Harness desktop app** on Windows.
+给 DeepSeek Harness 桌面版加一个「登录后自动启动」的 Windows 小插件。
 
-Every other "autostart" plugin for DSH starts a `dsh web` server in the background, or ships its own tray/desktop shell. This one does the opposite: it registers the **official desktop app itself**, so the window you actually use is there after you log in — and nothing else is started.
+## 起因
 
-## Why this exists
+我开机之后基本第一件事就是点开 Harness，每天都要手动开一次，很烦。
 
-- The desktop build has no built-in "launch at login" (the Electron shell does not call `setLoginItemSettings`).
-- Adding a `dsh web` service on top of a desktop app means two processes, two ports, and two places to look.
-- A Startup-folder shortcut is the smallest possible mechanism: single instance, no daemon, no service, no extra port.
+翻了社区里所有带 autostart 的插件，发现它们要么起一个 `dsh web` 后台服务，要么自己再包一层托盘、桌面壳。我用的就是官方桌面版，不需要多一个进程、多一个端口、多一个要维护的东西，所以写了个只干一件事的插件：把桌面版自己放进启动项。
 
-## Features (v0.1 preview)
+## 做了什么
 
-- Enable / disable logon autostart from the plugin.
-- Points the entry at the **currently running desktop executable**, resolved at enable time.
-- Self-check: reports whether the entry exists, whether its target still matches, and whether duplicates are present.
-- Repair path: re-creates a stale or broken entry instead of stacking new ones.
-- Clean uninstall: removes the entry when the plugin is disabled or removed.
+- 开关：在插件里打开或关闭登录自启
+- 指向当前正在跑的桌面版 exe，不写死路径
+- 自检：条目在不在、指向还对不对、有没有重复
+- 关掉插件时把条目删干净，不留垃圾
 
-Windows only.
+## 原理
 
-## How it works
+就是在 Windows 的启动文件夹里放一个快捷方式：
 
-1. Resolve the desktop executable path (or an explicit `DSH_DESKTOP_EXE` override).
-2. Create or remove a `.lnk` in the per-user Startup folder
-   (`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`)
-   through `WScript.Shell` COM, from a small PowerShell helper.
-3. Verify by reading the shortcut back and comparing the target.
+```
+%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
+```
 
-No registry writes, no scheduled tasks, no elevation.
+创建和删除走 `WScript.Shell` COM（用 PowerShell 调一次），不写注册表、不建计划任务、不需要管理员权限。
 
-## Install
+## 安装
 
 ```bash
 dsh plugin add github:QiYunqv-jxd/dsh-desktop-autostart
 ```
 
-## Status
+## 现状
 
-Early preview (v0.1.0). The autostart engine (`lib/autostart-win.js`) is implemented and self-tested on Windows; the settings surface is being wired up.
+v0.1 预发布。自启那块逻辑写完了，在本机自测通过；设置页里的开关还在接。
+
+有问题直接开 issue，我看到了会回。
 
 ## License
 
-MIT. Not affiliated with DeepSeek.
+MIT
