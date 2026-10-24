@@ -30,7 +30,7 @@ if ($Action -eq 'create') {
   $shortcut.TargetPath = $TargetPath
   if ($WorkingDirectory) { $shortcut.WorkingDirectory = $WorkingDirectory }
   if ($Description) { $shortcut.Description = $Description }
-  if (-not $shortcut.IconLocation) { $shortcut.IconLocation = "$TargetPath,0" }
+  $shortcut.IconLocation = "$TargetPath,0"
   $shortcut.Save()
   if (-not (Test-Path -LiteralPath $LnkPath)) { throw "shortcut file was not created: $LnkPath" }
 }
