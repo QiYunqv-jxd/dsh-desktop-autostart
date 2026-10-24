@@ -1,6 +1,6 @@
 {
   "name": "dsh-desktop-autostart",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "让 DeepSeek Harness 桌面版随 Windows 登录自动启动：只管理用户级启动文件夹里的那个快捷方式，不写注册表、不需要管理员、不额外常驻进程。Logon autostart for the DSH desktop app (Windows), implemented as one startup-folder shortcut.",
   "type": "module",
   "main": "lib/index.js",
